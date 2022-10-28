@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+{% block title %}Contactos{% endblock %}
+{% block body %}
+    <h1>Listado de contactos</h1>
+    {% if musicas %}    
+        {% for musica in musicas %}
+            {{ include ('search/ficha_musica.html.twig', {'musica': musica}) }}
+        {% endfor %}
+    {% else %}
+        <p>No se han encontrado contactos</p>
+    {% endif %}
+{% endblock %}
