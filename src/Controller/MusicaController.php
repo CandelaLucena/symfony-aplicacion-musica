@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Musica;
 use App\Entity\Autor;
+use App\Form\MusicaFormType;
 
 class MusicaController extends AbstractController{
 
@@ -19,18 +20,18 @@ class MusicaController extends AbstractController{
         9 => ["nombre" => "disco8", "precio" => 89, "autor_id" => 1]
     ];  
     
-    //Insertar nueva musica mediante formulario
+    //Insertar nueva musica mediante formulario Prueba: http://127.0.0.1:8080/musica/nuevo
     #[Route('/musica/nuevo', name: 'nueva_musica')]
     public function nuevo(ManagerRegistry $doctrine, Request $request) {
-        $contacto = new Musica();
-        $formulario = $this->createForm(ContactoType::class, $contacto);
+        $musica = new Musica();
+        $formulario = $this->createForm(MusicaFormType::class, $musica);
         $formulario->handleRequest($request);
         if ($formulario->isSubmitted() && $formulario->isValid()) {
-            $contacto = $formulario->getData();
+            $musica = $formulario->getData();
             $entityManager = $doctrine->getManager();
-            $entityManager->persist($contacto);
+            $entityManager->persist($musica);
             $entityManager->flush();
-            return $this->redirectToRoute('ficha_contacto', ["codigo" => $contacto->getId()]);
+            return $this->redirectToRoute('ficha_musica', ["codigo" => $musica->getId()]);
         }
         return $this->render('nuevo.html.twig', array(
             'formulario' => $formulario->createView()
@@ -43,14 +44,14 @@ class MusicaController extends AbstractController{
 
     }    
 
-    //Editar una musica, abriendo un formulario segun la ID de la musica elegida 
+    //Editar una musica, abriendo un formulario segun la ID de la musica elegida Prueba: http://127.0.0.1:8080/musica/editar/1
     #[Route('/musica/editar/{codigo}', name: 'editar_musica', requirements:["codigo"=>"\d+"])]
     public function editar(ManagerRegistry $doctrine, Request $request, $codigo) {
         $repositorio = $doctrine->getRepository(Musica::class);
 
         $musica = $repositorio->find($codigo);
         if ($musica){
-            $formulario = $this->createForm(ContactoType::class, $musica);
+            $formulario = $this->createForm(MusicaFormType::class, $musica);
             $formulario->handleRequest($request);
 
             if ($formulario->isSubmitted() && $formulario->isValid()) {
