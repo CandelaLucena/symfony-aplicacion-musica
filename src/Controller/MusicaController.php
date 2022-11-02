@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Musica;
+use App\Entity\Autor;
 
 class MusicaController extends AbstractController{
 
@@ -70,27 +71,29 @@ class MusicaController extends AbstractController{
         }
     }
     
-    //Insertar nueva musica
+    //Insertar nueva musica, segun el array de arriba, con autor. http://127.0.0.1:8080/musica/insertar
     #[Route('/musica/insertar', name: 'insertar_musica')]
     public function insertar(ManagerRegistry $doctrine)
     {
         $entityManager = $doctrine->getManager();
+        $repositorio = $doctrine->getRepository(Autor::class);
         foreach($this->musicas as $c){
             $musica = new Musica();
             $musica->setNombre($c["nombre"]);
             $musica->setPrecio($c["precio"]);
-            $musica->setAutor($c["autor_id"]);
+            $autor = $repositorio->find($c["autor_id"]);
+            $musica->setAutor($autor);
             $entityManager->persist($musica);
         }
         try{
             $entityManager->flush();
-            return new Response("Contactos insertados");
+            return new Response("Musicas insertadas");
         } catch (\Exception $e) {
             return new Response("Error insertando objetos");
         }  
     }
     
-    //Buscar musica por texto, muestra varios http://127.0.0.1:8080/musica/buscar/disco
+    //Buscar musica segun texto, muestra varias musicas http://127.0.0.1:8080/musica/buscar/disco
     #[Route('/musica/buscar/{texto}', name: 'buscar_musica')]
     public function buscar(ManagerRegistry $doctrine, $texto): Response{
         //Filtramos aquellos que contengan dicho texto en el nombre
@@ -103,7 +106,7 @@ class MusicaController extends AbstractController{
         ]);        
     }
 
-    //Buscar musica por ID http://127.0.0.1:8080/musica/2
+    //Buscar musica segun la ID http://127.0.0.1:8080/musica/2
     #[Route('/musica/{codigo}', name: 'ficha_musica')]
     public function ficha(ManagerRegistry $doctrine, $codigo): Response{
 	    $repositorio = $doctrine->getRepository(Musica::class);
@@ -114,7 +117,7 @@ class MusicaController extends AbstractController{
 	    ]);
 	}    
     
-    //Modificar musica segun ID http://127.0.0.1:8080/musica/update/1/disco3
+    //Modificar el nombre de la musica segun la ID http://127.0.0.1:8080/musica/update/1/disco3
     #[Route('/musica/update/{id}/{nombre}', name: 'modificar_musica')]
     public function update(ManagerRegistry $doctrine, $id, $nombre): Response{
         $entityManager = $doctrine->getManager();
@@ -122,8 +125,7 @@ class MusicaController extends AbstractController{
         $musica = $repositorio->find($id);
         if ($musica){
             $musica->setNombre($nombre);
-            try
-            {
+            try{
                 $entityManager->flush();
                 return $this->render('search/ficha_musica.html.twig', [
                     'musica' => $musica
