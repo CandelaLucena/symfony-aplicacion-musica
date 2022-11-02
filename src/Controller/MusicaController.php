@@ -33,7 +33,7 @@ class MusicaController extends AbstractController{
             $entityManager->flush();
             return $this->redirectToRoute('ficha_musica', ["codigo" => $musica->getId()]);
         }
-        return $this->render('nuevo.html.twig', array(
+        return $this->render('search/nuevo.html.twig', array(
             'formulario' => $formulario->createView()
         ));
     }

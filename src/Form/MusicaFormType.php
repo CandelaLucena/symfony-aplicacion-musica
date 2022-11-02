@@ -20,7 +20,7 @@ class MusicaFormType extends AbstractType
             ->add('autor',EntityType::class,array(
                 'class' =>Autor::class,
                 'choice_label' => 'nombre',))
-            ->add ('save',SubmitType::class,array('labe'=>'Enviar'));
+            ->add ('save',SubmitType::class,array('label'=>'Enviar'));
     }
 
     public function configureOptions(OptionsResolver $resolver): void
