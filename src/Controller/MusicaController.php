@@ -1,6 +1,5 @@
 <?php
 namespace App\Controller;
-use App\Form\ContactoType;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -61,11 +60,11 @@ class MusicaController extends AbstractController{
                 $entityManager->flush();
                 return $this->redirectToRoute('ficha_musica', ["codigo" => $musica->getId()]);
             }
-            return $this->render('nuevo.html.twig', array(
+            return $this->render('search/nuevo.html.twig', array(
                 'formulario' => $formulario->createView()
             ));
         }else{
-            return $this->render('ficha_musica.html.twig', [
+            return $this->render('search/ficha_musica.html.twig', [
                 'musica' => NULL
             ]);
         }
@@ -111,7 +110,7 @@ class MusicaController extends AbstractController{
     public function ficha(ManagerRegistry $doctrine, $codigo): Response{
 	    $repositorio = $doctrine->getRepository(Musica::class);
 	    $musica = $repositorio->find($codigo);
-
+        
 	    return $this->render('search/ficha_musica.html.twig', [
 	    	'musica' => $musica
 	    ]);
