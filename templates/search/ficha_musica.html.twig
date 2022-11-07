@@ -1,14 +1,14 @@
 {% extends 'base.html.twig' %}
-{% block title %}Contactos{% endblock %}
+{% block title %}Musicas{% endblock %}
 {% block body %}
-    <h1>Ficha del contacto</h1>
+    <h1>Ficha de musica</h1>
     {% if musica %}
         <ul>
             <li>Nombre: {{ musica.nombre }}</li>
             <li>Precio: {{ musica.precio }}</li>
-            <li>Precio: {{ musica.autor.nombre }}</li>
+            <li>Autor: {{ musica.autor.nombre }}</li>
         </ul>
     {% else %}
-        <p>Contacto no encontrado</p>
+        <p>Musica no encontrada</p>
     {% endif %}
 {% endblock %}

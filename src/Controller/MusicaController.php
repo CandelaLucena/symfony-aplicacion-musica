@@ -159,7 +159,7 @@ class MusicaController extends AbstractController{
                 return new Response("Error eliminado objeto");
             }  
         }else
-            return $this->render('ficha_contacto.html.twig', [
+            return $this->render('search/ficha_musica.html.twig', [
                 'musica' => null
             ]);  
     }
