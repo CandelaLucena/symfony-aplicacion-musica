@@ -37,10 +37,15 @@ class MusicaController extends AbstractController{
         ));
     }
 
-    //Mostrar todas las musicas
+    //Mostrar todas las musicas Prueba: http://127.0.0.1:8080/musica/mostrar/todo
     #[Route('/musica/mostrar/todo', name: 'mostrar_todo_user')]
-    public function mostrarTodo(){
+    public function mostrarTodo(ManagerRegistry $doctrine): Response{
+        $repositorio = $doctrine->getRepository(Musica::class);
+        $musicas = $repositorio->findAll();
 
+        return $this->render('search/lista_musicas.html.twig', [
+            'musicas' => $musicas
+        ]);
     }    
 
     //Editar una musica, abriendo un formulario segun la ID de la musica elegida Prueba: http://127.0.0.1:8080/musica/editar/1
